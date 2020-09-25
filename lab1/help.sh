@@ -16,8 +16,8 @@ strlen - gets string's length
 	strlen string1 - returns the length
 interactive - enables interactive mod
 log - enables log mod
-interactive - enables interactive mod.
-exxit - exits the programm with some code.
+interactive - enables interactive  mod.
+_exit - exits the programm with some code.
 	exxit exit_code - exits programm with code exit_code
 "
 }

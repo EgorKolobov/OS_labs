@@ -1,7 +1,9 @@
 #!/bin/bash
 log() {
-Y="\033[0;33m"
-DEF="\033[0m"
-sed -n 's/(WW)/Warning/p' /var/log/anaconda/X.log
-sed -n 's/(II)/Information/p' /var/log/anaconda/X.log
+Y='\033[93m'
+B='\033[34m'
+DEF='\033[0m'
+grep  "WW" /var/log/anaconda/X.log | sed ''/WW/s//`printf "${Y}Warning${DEF}"`/'' > strm
+grep "II" /var/log/anaconda/X.log | sed ''/II/s//`printf "${B}Information${DEF}"`/'' >> strm
+cat strm
 }

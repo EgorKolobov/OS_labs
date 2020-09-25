@@ -9,6 +9,8 @@ elif ! [[ -f $2 ]]; then
 	user_exception "Destination-file doesn't exist."
 elif ! [[ -w $2 ]]; then
 	user_exception "Can't open file to write."
+elif ! [[ $# -ne 2 ]]; then
+	number_exception
 else
 	tac $1>$2
 fi
