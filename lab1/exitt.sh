@@ -1,22 +1,18 @@
 #!/bin/bash
 
 exitt() {
-if ! [[ -z "$1" ]]; then
-	echo "Programm ended up with exit code $1"
-	exit $1
-else
-	echo "Program ended up with exit code 0"
-	exit 0
-fi
+	[[ $# -eq 0 ]] && exit 0
+	[[ $# -eq 1 ]] &&  verify_int $1 && exit $1
+	[[ $# -eq 1 ]] && datatype_exception "Argument $1 is not int!"
 }
 
 interactive_exit() {
-echo "Enter exit code"
-while :
+while : 
 do
-read exit_code
-int_check $exit_code && break
-echo "Exit code must be a number"
+	echo "Enter exit code"
+	read exit_code
+	verify_int $exit_code && break
 done
-exitt "$exit_code"
+echo "Programm ended up with exit code $exit_code."
+exit $exit_cod
 }

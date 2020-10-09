@@ -1,37 +1,52 @@
 #!/bin/bash
 
 calc() {
-if [[ $# -ne 3 ]]; then
-number_exception
-fi
+! verify_int $2 && wrong_data "Second argument is not an int!"
+! verify_int $3 && wrong_data "Third argument is not an int!"
 case $1 in
-"sum") echo "$2 + $3 = $(($2 + $3))";;
-"sub") echo "$2 - $3 = $(($2 - $3))";;
-"div") if [[ "$3" -eq 0 ]]; then
-	user_exception "Division by zero."
-	else
-	echo "$2 / $3 = $(($2 / $3))"
-	fi;;
-"mul") echo "$2 * $3 = $(($2 * $3))";;
-*) user_exception "Unknown calc command.";;
+	"sum") echo "$(( $2 + $3 ))";;
+	"sub") echo "$(( $2 - $3 ))";;
+	"div") if [[ "$3" -eq 0 ]]; then
+		user_exception "Division by zero."
+		else
+		echo "$(( $2 / $3 ))"
+		fi;;
+	"mul") echo "$(( $2 * $3 ))";;
+	*) user_exception "Unknown calc command.";;
 esac
 }
 
 interactive_calc() {
-echo "Enter calc arguments."
-read arg1
 while :
 do
-	read arg2
-	int_check $arg2 && break
-	echo "arg2 is not int!"
+	echo "Choose operation (sub, sum, div, mul)"
+	read operation
+	verify_operator $operation "sum" || verify_operator $operation "sub" && break
+	verify_operator $operation "div" || verify_operator $operation "mul" && break
+	echo "Can't find such operation. Try again."
 done
 
 while :
 do
-	read arg3
-	int_check $arg3 && break
-	echo "arg3 is not int!"
+	echo "Enter first argument"
+	read arg1
+	! [[ $arg1 -eq $arg1 ]] 2>/dev/null && interactive_number_exception && continue
+	verify_int $arg1 && break
+	interactive_datatype_exception "First argument is not int!"
 done
-calc "$arg1" "$arg2" "$arg3"
+
+while :
+do
+	echo "Enter second argument"
+	read arg2
+	! [[ $arg2 -eq $arg2 ]] 2>/dev/null && interactive_number_exception && continue
+	if [[ $operator == div ]] && [[ $arg2 -eq 0 ]]; then
+		interactive_user_exception "(Interactive) Division by zero"
+		continue
+	fi
+	verify_int $arg2 && break
+	interactive_datatype_exception "Second argument is not int!"
+done
+
+calc $operation $arg1 $arg2
 }

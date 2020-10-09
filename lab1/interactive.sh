@@ -22,7 +22,7 @@ do
 	7) interactive_exit;;
 	*) echo "Unknown command. Try again."
 	esac
-echo "Enter 'exit' to exit."
+echo "Enter 'exit' to exit. Enter something else to continue."
 read ans
 if [[ "$ans" == "exit" ]]; then
 	break;
