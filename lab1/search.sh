@@ -1,6 +1,7 @@
 #!/bin/bash
 
 search() {
+grep -R -l -s $2 $1 2>&1 | grep -v "Permission denied"
 ! verify_directory $1 && user_exception "No such directory!"
 grep -r $2 $1 2>/dev/null
 }

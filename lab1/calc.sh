@@ -1,8 +1,8 @@
 #!/bin/bash
 
 calc() {
-! verify_int $2 && wrong_data "Second argument is not an int!"
-! verify_int $3 && wrong_data "Third argument is not an int!"
+! verify_int $2 && user_exception "Second argument is not an int!"
+! verify_int $3 && user_exception "Third argument is not an int!"
 case $1 in
 	"sum") echo "$(( $2 + $3 ))";;
 	"sub") echo "$(( $2 - $3 ))";;
