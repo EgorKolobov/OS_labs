@@ -1,7 +1,5 @@
 #!/bin/bash
 
-trashPath="$HOME/.trash"
-
 if [[ "$#" -ne "1" ]]; then
         echo "Неверное ко-во аргументов"
         exit 1
@@ -9,20 +7,17 @@ fi
 
 fileName="$PWD/$1"
 
-IFS=$'\n'
-files=$(cat "$HOME/.trash.log")
-for r in $files
+for r in $(cat "$HOME/.trash.log")
 do
-    echo "$r"
     filei=$(echo "$r" | awk -F '</>' '{ print $1 }')
     fileId=$(echo "$r" | awk -F '</>' '{ print $2 }')
     if [[ "$fileName" == "$filei" ]]; then
-            removeFile="$trashPath/$fileId"
+            removeFile="$HOME/.trash/$fileId"
             if [[ -e "$removeFile" ]]; then
-                    echo "Востановить файл: $filei? (y/n)"
+                    echo "Востановить файл: $filei? (1/0)"
                     read ans -r
-                    if [[ "$ans" == "y" ]]; then
-                        if [[ -d "$(dirname "$filei")" ]]; then
+                    if [[ "$ans" == "1" ]]; then
+                        if [[ -z "$(find ~ -name "$(dirname "$filei")" 2>/dev/null)" ]]; then
                                     if [[ -e "$filei" ]]; then
                                             echo "Файл с таким именем уже существует"
                                             echo "Введите новое имя файла:"

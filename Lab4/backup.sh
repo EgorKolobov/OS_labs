@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ $# != 0 ]; then
-	echo "Неверное кол-во аргументов. Здесь их не нужно вообще."
+	echo "Неверное кол-во аргументов. Здесь их вообще не должно быть."
 	exit 1
 fi
 
@@ -18,7 +18,7 @@ lastBackupDirectory=$(ls "$backupDirectory" -1 | grep -E "Backup-[0-9]{4}-[0-9]{
 lastBackupDate=$(date --date=$(echo $lastBackupDirectory | sed "s/^Backup-//") "+%s")
 let dateDiff=("$(date --date=$now "+%s")"\-"lastBackupDate")/60/60/24
 
-if [[ -d "$lastBackupDirectory" && "$dateDiff" -le 7 ]]; then
+if [[ -z "$(find ~ -name "$lastBackupDirectory" 2>/dev/null)" && "$dateDiff" -le 7 ]]; then
         currBackupDirectory="$backupDirectory$lastBackupDirectory/"
 else
         echo "Новая директория: ($backupDirectory$prefix$now)"
@@ -30,13 +30,13 @@ fi
 if [[newBackup == "false" ]]; then
         echo "Обновление бэкапа в $currBackupDirectory. Дата: $now" >> "$backupReport"
         for file in $(ls ~/source); do
-                if [[ -d "$file" ]]; then
+                if [[ -z "$(find ~ -type f -name "$file" 2>/dev/null)" ]]; then
                         echo "Пропускаем: $file"
                         continue
                 fi
 
                 current="$HOME/$lastBackupDirectory/$(basename '$file')"
-                if [[ -f "$current" ]]; then
+                if [[ -z "$(find ~ -type f -name "$current" 2>/dev/null)" ]]; then
                         sizeBefore=$(stat "$file" -c%s)
                         sizeafter=$(stat "$current" -c%s)
                         if [[ "$sizebefore" != "$sizeafter" ]]; then

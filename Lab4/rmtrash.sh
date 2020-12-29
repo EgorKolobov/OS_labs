@@ -12,30 +12,24 @@ if [[ ! -f "$PWD/$fileName" ]]; then
         exit 1
 fi
 
-trashPath=~/.trash
-trashlog=~/.trash.log
-
-echo "$PWD"
-if [[ ! -d $trash ]]; then
-	mkdir $trash
-    echo "Создана директория trash"
+if [[ -z "$(find ~ -name "trash" 2>/dev/null)" ]]; then
+    echo "Создаётся каталог: trash"
+    mkdir ~/trash
 fi
 
-if [[ ! -f $trashlog ]]; then
-    echo "Создан trash.log"
-	touch $trashlog
+if [[ -z "$(find ~ -type f -name "trash.log" 2>/dev/null)" ]]; then
+    echo "Создаётся файл: trash.log"
+    echo "">~/trash.log
 fi
 
-if [[ ! -d "$trashPath" ]]; then
-    currentId="0"
-        mkdir "$trashPath"
-        echo "$currentId" > "$trashPath/.last_id"
-else
-        currentId=$(cat $trashPath/.last_id)
-        let currentId=$currentId+1
-        echo "$currentId" > "$trashPath/.last_id"
+currentId="0"
+if [[ ! -z "$(ls -A ~/trash)" ]]; then
+    currentId=$(ls $HOME/trash | sort -V | tail -n 1)
+    let currentId=$currentId+1
 fi
 
-ln "$PWD/$fileName" "$trashPath/$currentId"
-echo "$PWD/$fileName</>$currentId" >> "$HOME/.trash.log"
+ln "$PWD/$fileName" "$HOME/trash/$currentId"
+
+echo "Name: $PWD/$fileName ; Link: $currentId">>"$HOME/trash.log"
+
 rm "$PWD/$fileName"
