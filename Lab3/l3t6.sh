@@ -1,4 +1,4 @@
 #!/bin/bash
 
-bash 3_6_proc.sh&pid=$!
-bash 3_6_gen.sh $pid
+bash l3t6_handler.sh&pid=$!
+bash l3t6_generator.sh $pid
